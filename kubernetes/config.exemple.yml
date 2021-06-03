@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: minefight-api-config-env
+  namespace: minecraft
+data:
+  LOG_LEVEL: debug
+  LOG_PRETTY: "true"
+  MONGO_HOST: mongodb.default.svc.cluster.local
+  MONGO_AUTH_DB: minefight
+  MONGO_DB: minefight
+  REDIS_HOST: redis.default.svc.cluster.local:6379
+  REDIS_DB: "0"
+  ORCHESTRATOR_SERVERS_IMAGE: registry.gitlab.com/minefight-france/mc-servers-image
+  ORCHESTRATOR_SERVERS_IMAGE_PULL_SECRET: gitlab-registry
+  ORCHESTRATOR_SERVERS_MEMORY: "1024"
+  ORCHESTRATOR_SERVER_BUNGEECORD_IMAGE: registry.gitlab.com/minefight-france/mc-servers-image:BUNGEECORD
+  ORCHESTRATOR_SERVER_BUNGEECORD_MEMORY: "256"
+  ORCHESTRATOR_SERVER_BUNGEECORD_INITINSTANCE: "0"
+  ORCHESTRATOR_SERVER_BUNGEECORD_MAXINSTANCE: "1"
+  ORCHESTRATOR_SERVER_HOST: "{id}.mfmc.fr"
+  ORCHESTRATOR_SERVER_SERVICE_NAME: mfmc-servers
+  ORCHESTRATOR_SERVER_DNS: "{id}.{service}.{namespace}.svc.cluster.local"
+  ORCHESTRATOR_SERVER_PULLPOLICY: Always
+  WEBSITE_STAFF_ROLES: "5eff6671dbfd878ce10365da,5fdcde2c05f8c9d2025e0bdc"
+  WEBSITE_ADMIN_ROLES: 5eff6671dbfd878ce10365db
+  WEBSITE_SANCTION_URL: https://minefight.fr/moderation/sanctions/{id}
+  WEBSITE_PLAYER_URL: https://minefight.fr/moderation/players/{id}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minefight-api-secret-env
+  namespace: minecraft
+type: Opaque
+stringData:
+  API_KEY: apiToken
+  MONGO_USER: username
+  MONGO_PASS: password
+  REDIS_PASS: password
+  DISCORD_TOKEN: discordToken

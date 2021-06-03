@@ -1,0 +1,20 @@
+# Node JS
+node_modules
+*.log
+# Ignore dist (is compiled in docker iamge)
+dist
+
+# Docker
+Dockerfile
+.dockerignore
+kubernetes
+
+# Git
+.gitignore
+.commitlintrc.js
+.gitlab-ci.yml
+README.md
+docs
+
+# VS Code
+.vscode

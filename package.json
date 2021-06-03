@@ -1,0 +1,78 @@
+{
+  "name": "minefight-api",
+  "version": "1.1.0",
+  "description": "The API for link minecraft server data",
+  "main": "dist/index.js",
+  "repository": "https://gitlab.com/minefight-france/web-api",
+  "author": "orblazer",
+  "private": true,
+  "scripts": {
+    "build": "tsc && node ./resolve-ts-alias.js",
+    "start": "node dist",
+    "serve": "nodemon --files -r tsconfig-paths/register src/index.ts",
+    "lint": "eslint --ext .ts --ignore-path .gitignore ."
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@tsconfig/node14": "^1.0.0",
+    "@types/ioredis": "^4.17.8",
+    "@types/lodash": "^4.14.165",
+    "@types/mongoose": "^5.10.3",
+    "@types/node": "^14.14.11",
+    "@types/pino": "^6.3.4",
+    "@types/source-map-support": "^0.5.3",
+    "@types/uuid": "^8.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-unicorn": "^23.0.0",
+    "husky": "^4.3.5",
+    "lint-staged": "^10.5.3",
+    "nodemon": "^2.0.6",
+    "replace-in-file": "^6.1.0",
+    "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.1.2"
+  },
+  "dependencies": {
+    "@kubernetes/client-node": "^0.13.0",
+    "@typegoose/typegoose": "^7.4.5",
+    "axios": "^0.21.0",
+    "date-fns": "^2.16.1",
+    "discord.js": "^12.5.1",
+    "fastify": "^3.9.1",
+    "fastify-bearer-auth": "^5.0.2",
+    "fastify-compress": "^3.4.0",
+    "fastify-cors": "^5.1.0",
+    "fastify-formbody": "^5.0.0",
+    "fastify-plugin": "^3.0.0",
+    "ioredis": "^4.19.2",
+    "js-yaml": "^3.14.1",
+    "lodash": "^4.17.20",
+    "mongoose": "5.10.19",
+    "pino-pretty": "^4.3.0",
+    "prom-client": "^12.0.0",
+    "source-map-support": "^0.5.19",
+    "under-pressure": "^5.4.0",
+    "uuid": "^8.3.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "yarn lint"
+    ]
+  }
+}

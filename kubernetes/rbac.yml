@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: minefight-api
+  namespace: minecraft
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: minefight-api-orchestrator
+  namespace: minecraft
+rules:
+  - apiGroups: [""]
+    # at the HTTP level, the name of the resource for accessing Pod
+    # objects is "pods"
+    resources: ["pods"]
+    verbs: ["get", "list", "create", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: minefight-api-role
+  namespace: minecraft
+subjects:
+- kind: ServiceAccount
+  name: minefight-api
+roleRef:
+  kind: Role
+  name: minefight-api-orchestrator
+  apiGroup: rbac.authorization.k8s.io

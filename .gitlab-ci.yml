@@ -1,0 +1,51 @@
+stages:
+  - lint
+  - build
+
+lint:
+  image: node:14-alpine
+  stage: lint
+  script:
+    # Install eslint
+    - yarn add eslint eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-promise \
+        eslint-plugin-standard eslint-plugin-unicorn
+    - node_modules/eslint/bin/eslint.js --ext .ts --ignore-path .gitignore .
+  rules:
+    - allow_failure: false
+
+build-dev:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  environment:
+    name: development
+  variables:
+    NODE_ENV: development
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:master || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:master --tag $CI_REGISTRY_IMAGE:dev-$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:master .
+    - docker push "$CI_REGISTRY_IMAGE:master"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev" # Execute jobs when a new commit is pushed to dev branch
+
+build:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  environment:
+    name: production
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --tag $CI_REGISTRY_IMAGE:latest .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" # Execute jobs when a new commit is pushed to master branch

@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mfmc-{type}-{id}
+  labels:
+    app: minefight
+    redis-client: "true"
+spec:
+  containers:
+    - name: server
+      env:
+        - name: CFG_SERVER_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: MEMORY
+          value: "0"
+      envFrom:
+        - secretRef:
+            name: minefight-server-secret-env
+        - configMapRef:
+            name: minefight-server-config-env
+      readinessProbe:
+        exec:
+          command:
+            - mc-monitor
+            - status
+        initialDelaySeconds: 20
+        periodSeconds: 5
+        failureThreshold: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      livenessProbe:
+        exec:
+          command:
+            - mc-monitor
+            - status
+        initialDelaySeconds: 20
+        periodSeconds: 5
+        failureThreshold: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      restartPolicy: OnFailure
+      resources:
+        requests:
+          memory: "0"
+          cpu: "0"
+        limits:
+          memory: "0"
+          cpu: "0"
+      ports:
+        - containerPort: 25565
+  imagePullSecrets: []
